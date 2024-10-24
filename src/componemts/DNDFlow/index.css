@@ -11,23 +11,34 @@
   font-size: 12px;
   background: #fcfcfc;
 }
-.dndflow aside .description {
-  margin-bottom: 10px;
+.dndflow aside .sidbar_description {
+  margin-bottom: 20px;
+  line-height: 25px;
+  color: #0041d0;
 }
-.dndflow .dndnode {
+.dndflow .dndnode , .nodes_search {
   height: 20px;
   padding: 4px;
-  border: 1px solid #1a192b;
-  border-radius: 2px;
-  margin-bottom: 10px;
+  border: 1px solid hsl(243, 26%, 13%);
+  box-shadow: 0 3px 6px 3px #00000029;
+  border-radius: 5px;
+  margin: 0 auto 20px auto;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: grab;
+  width: 85%;
 }
-
+.dndflow .dndnode:hover{
+  transform: translateX(10px); 
+  border: 1px solid transparent;
+  transition: all .5s ease-in-out;
+}
+.dndflow .dndnode:hover.input{
+  border: 1px solid transparent;
+}
 .dndflow .dndnode.input {
-  border-color: #0041d0;
+  border-color: rgba(0, 65, 208,.3);
 }
 
 .dndflow .dndnode.output {
@@ -41,6 +52,54 @@
 
 .dndflow .selectall {
   margin-top: 10px;
+}
+.nodes_listing_wrapper{
+  height: 60vh;
+  overflow-y: scroll;
+}
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(85, 85, 85,0.1);
+}
+.nodes_search input{
+  width: 100%;
+  border: none; 
+}
+.nodes_search input:focus{
+  outline: none;
+}
+.nodes_search{
+border: none;
+}
+.show_add{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0;
+  background-color: #186ed1;
+}
+.show_add button , .form_wrapper form button:first-of-type{
+  background-color: white;
+  border: 1px solid #186ed1;
+  width: 100%;
+  padding: 10px;
+  cursor: pointer;
+  color:#186ed1 ;
 }
 
 @media screen and (min-width: 768px) {
@@ -64,12 +123,12 @@
 /* start node style*/
 .start_node{
   background-color: #636670;
-  width: 100px;
-  height: 100px;
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
   color: white;
-  font-size: 18px;
-  font-size: bolder;
+  font-size: 15px;
+  font-weight: bolder;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -77,13 +136,26 @@
 /* custom node style*/
 .custom_node_wrapper{
   background-color: white;
-  border: 1px solid #636670;
+  border: 1px solid rgba(99, 102, 112,.4);
   min-width: 150px;
   border-radius: 5px;
-  padding: 10px 20px ;
+  padding:  10px;
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+  box-shadow: 0 3px 6px 3px #00000029;
+}
+.custom_condition_node_wrapper{
+  background-color: #636670;
+  border: 1px solid white;
+  min-width: 150px;
+  border-radius: 5px;
+  padding:  10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
 }
 /* global styles */
 .node_item{
@@ -93,11 +165,75 @@
   justify-content: center;
 }
 .node_icon svg{
-  height: 30px;
+  height: 20px;
   margin-right: 10px;
   /* fill:#186ed1; */
   stroke: #186ed1;
 }
 .node_title{
-  font-size: 14px
+  font-size: 14px;
 }
+/* controllers buttons style*/
+.controllers_btns {
+  background-color: white;
+  border:1px solid rgba(24, 110, 209,.4);
+  padding: 5px 10px;
+}
+.controllers_btns button{
+  border: none;
+  background-color: unset;
+  cursor: pointer;
+}
+.controllers_btns button svg{
+ width:20px;
+}
+/* flow form style*/
+.flow_form{
+  margin: 10px 0;
+}
+.form_wrapper form{
+display: flex;
+flex-direction: column;
+}
+.form_wrapper form input{
+  margin: 10px 0 10px 0;
+  height: 20px;
+  padding: 4px;
+  box-shadow: 0 3px 6px 3px #00000029;
+  border-radius: 5px;
+  border: none;
+  }
+  .form_wrapper form input:focus{
+    outline:none;
+  }
+  .form_btns{
+    display: flex;
+  }
+  .form_wrapper form button:last-of-type{
+    background-color: white;
+  border:1px solid #186ed1;
+  padding: 5px 10px;
+  color: #186ed1;
+  }
+.node_delete_wrapper button{
+ width: 100%;
+ background-color: white;
+ border:1px solid red;
+ padding: 5px 10px;
+ color: red;
+ cursor: pointer;
+  }
+  /* custom node children style*/
+  .node_children_icon svg{
+    height: 20px;
+  }
+  .node_children_item{
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: black;
+  }
+  .node_children_item span svg{
+    height: 40px;
+    margin-right: 10px;
+  }

@@ -3,7 +3,7 @@ const StartNode = () => {
     return(
         <>
         <div className="start_node">
-            start node
+            START
         </div>
         <Handle type="source" position={Position.Bottom} />
         </>
