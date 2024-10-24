@@ -19,9 +19,11 @@ import { DnDProvider, useDnD } from "./DnDContext";
 import "./index.css";
 import CustomNode from "./CustomNode";
 import StartNode from "./CustomStartNode";
+import { NodesProvider } from "./NodeContext";
 let id = 0;
 const getId = () => `dndnode_${id++}`;
 const DnDFlow = () => {
+  const [backgroundVariant, setBackgroundVarient] = useState("dots");
   const nodeTypes = { CustomNode, StartNode };
   const initialNodes = [
     {
@@ -56,7 +58,10 @@ const DnDFlow = () => {
         id: getId(),
         type,
         position,
-        data: { label: `${type}`, icon: `${type}` , children:`${type}` =='Card Networks' ? true: false ,  nodes:nodes , setNodes:setNodes},
+        data: { 
+          label: `${type}`, 
+          icon: `${type}`, 
+        },
         type: "CustomNode",
       };
       setNodes((nds) => nds.concat(newNode));
@@ -108,7 +113,8 @@ const DnDFlow = () => {
     }
   };
   return (
-    <div className="dndflow">
+   <NodesProvider nodes={nodes} setNodes={setNodes}>
+     <div className="dndflow">
       <div className="reactflow-wrapper" ref={reactFlowWrapper}>
         <ReactFlow
           nodes={nodes}
@@ -118,15 +124,24 @@ const DnDFlow = () => {
           onConnect={connect}
           onDrop={onDrop}
           onDragOver={onDragOver}
+          // onNodeClick={(e, val) => {
+          //   if (val) {
+          //     setNodeLabel(val?.data?.label);
+          //       setEditNode(val);
+          //   }
+          // }}
           onNodeClick={(e, val) => {
             if (val) {
-              setNodeLabel(val?.data?.label);
-              setEditNode(val);
+              const isTitleClick = e.target.classList.contains('node_title');
+              if (isTitleClick) {
+                setNodeLabel(val?.data?.label);
+                setEditNode(val);
+              }
             }
           }}
           nodeTypes={nodeTypes}
         >
-          <Background variant="lines" gap={10} color="#ebeff1" />
+          <Background variant={backgroundVariant} gap={10} color="#cdced1" />
           <Panel position="bottom-right">
             <div className="controllers_btns">
               <button onClick={() => zoomIn({ duration: 800 })}>
@@ -182,7 +197,20 @@ const DnDFlow = () => {
               </button>
             </div>
           </Panel>
-          <MiniMap position="top-left"/>
+           <MiniMap position="bottom-left"/> 
+           <Panel position="top-left">
+          <div className="controllers_btns">
+          <button className={backgroundVariant == 'dots' && "active-bg"} onClick={() => setBackgroundVarient("dots")}>BG1</button>
+          <button
+            style={{ margin: "0 5px" }}
+            onClick={() => setBackgroundVarient("lines")}
+            className={backgroundVariant == 'lines' && "active-bg"}
+          >
+            BG2
+          </button>
+          <button  className={backgroundVariant == 'cross' && "active-bg"} onClick={() => setBackgroundVarient("cross")}>BG3</button>
+          </div>
+        </Panel>
         </ReactFlow>
       </div>
       <Sidebar
@@ -195,6 +223,7 @@ const DnDFlow = () => {
         setNodes={setNodes}
       />
     </div>
+   </NodesProvider>
   );
 };
 

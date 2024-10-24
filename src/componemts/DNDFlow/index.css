@@ -178,11 +178,19 @@ border: none;
   background-color: white;
   border:1px solid rgba(24, 110, 209,.4);
   padding: 5px 10px;
+  color: rgba(24, 110, 209,.4);
 }
 .controllers_btns button{
   border: none;
   background-color: unset;
-  cursor: pointer;
+  cursor: pointer; 
+  color: rgba(24, 110, 209,1);
+}
+.controllers_btns button.active-bg{
+  background-color: rgba(24, 110, 209,1);
+  padding: 10px;
+  color: white;
+  border-radius: 5px;
 }
 .controllers_btns button svg{
  width:20px;
