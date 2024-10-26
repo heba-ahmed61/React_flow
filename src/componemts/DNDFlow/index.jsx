@@ -56,7 +56,6 @@ const DnDFlow = () => {
 
       const newNode = {
         id: getId(),
-        type,
         position,
         data: { 
           label: `${type}`, 

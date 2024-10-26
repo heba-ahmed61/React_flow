@@ -40,13 +40,12 @@ const [nodesListing, setNodesListing] = useState(nodes)
              className="dndnode input"
              onDragStart={(event) => onDragStart(event, node.title)}
              draggable>
-         <div className='node_icon'>{node?.icon}</div>
          <div className='node_title'>{node.title}</div>
         </div>
       ))}
        </div>
       <div className='flow_form'>
-        <FlowForm onSubmit={onSubmit} nodeLabel={nodeLabel} setNodeLabel={setNodeLabel} editNode={editNode}  setDeleteNode={setDeleteNode}/>
+        <FlowForm onSubmit={onSubmit} nodeLabel={nodeLabel} setNodeLabel={setNodeLabel} editNode={editNode}  />
       </div>
       {editNode && <div className='node_delete_wrapper'>
         <button onClick={(e) => {
