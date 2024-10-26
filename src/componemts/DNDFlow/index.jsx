@@ -19,12 +19,14 @@ import { DnDProvider, useDnD } from "./DnDContext";
 import "./index.css";
 import CustomNode from "./CustomNode";
 import StartNode from "./CustomStartNode";
+import ButtonEdge from './ButtonEdge';
 import { NodesProvider } from "./NodeContext";
 let id = 0;
 const getId = () => `dndnode_${id++}`;
 const DnDFlow = () => {
   const [backgroundVariant, setBackgroundVarient] = useState("dots");
   const nodeTypes = { CustomNode, StartNode };
+  const edgeTypes = {ButtonEdge};
   const initialNodes = [
     {
       id: "1",
@@ -37,6 +39,9 @@ const DnDFlow = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const { screenToFlowPosition } = useReactFlow();
+  const { zoomIn, zoomOut, fitView } = useReactFlow();
+  const [nodeLabel, setNodeLabel] = useState(null);
+  const [editNode, setEditNode] = useState(null);
   const [type] = useDnD();
   const onDragOver = useCallback((event) => {
     event.preventDefault();
@@ -46,7 +51,6 @@ const DnDFlow = () => {
   const onDrop = useCallback(
     (event) => {
       event.preventDefault();
-
       if (!type) return;
 
       const position = screenToFlowPosition({
@@ -67,28 +71,10 @@ const DnDFlow = () => {
     },
     [screenToFlowPosition, type]
   );
-  const connect = useCallback((connection) => {
-    const edge = {
-      ...connection,
-      animated: true,
-      markerEnd: {
-        type: MarkerType.ArrowClosed,
-        width: 20,
-        height: 20,
-        color: "#636670",
-      },
-      id: Date.now().toString(),
-    };
-    setEdges((prev) => addEdge(edge, prev));
-  }, []);
-
-  const { zoomIn, zoomOut, fitView } = useReactFlow();
-  const [nodeLabel, setNodeLabel] = useState("");
-  const [editNode, setEditNode] = useState(null);
   const onSubmit = (e) => {
     e.preventDefault();
     if (!editNode) {
-      if (nodeLabel.trim()) {
+      if (nodeLabel.trim()) {  
         setNodes((prev) => [
           ...prev,
           {
@@ -98,8 +84,9 @@ const DnDFlow = () => {
             type: "CustomNode",
           },
         ]);
-        setNodeLabel("");
+        
       }
+      setNodeLabel("");
     } else {
       const updatedNodes = nodes.map((node) =>
         node.id === editNode.id
@@ -111,6 +98,21 @@ const DnDFlow = () => {
       setNodeLabel("");
     }
   };
+  const connect = useCallback((connection) => {
+    const edge = {
+      ...connection,
+      animated: true,
+      type: 'ButtonEdge',
+      markerEnd: {
+        type: MarkerType.ArrowClosed,
+        width: 20,
+        height: 20,
+        color: "#636670",
+      },
+      id: Date.now().toString(),
+    };
+    setEdges((prev) => addEdge(edge, prev));
+  }, []);
   return (
    <NodesProvider nodes={nodes} setNodes={setNodes}>
      <div className="dndflow">
@@ -118,6 +120,8 @@ const DnDFlow = () => {
         <ReactFlow
           nodes={nodes}
           edges={edges}
+          nodeTypes={nodeTypes}
+          edgeTypes={edgeTypes}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={connect}
@@ -138,7 +142,6 @@ const DnDFlow = () => {
               }
             }
           }}
-          nodeTypes={nodeTypes}
         >
           <Background variant={backgroundVariant} gap={10} color="#cdced1" />
           <Panel position="bottom-right">
