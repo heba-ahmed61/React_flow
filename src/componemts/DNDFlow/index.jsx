@@ -51,8 +51,8 @@ const DnDFlow = () => {
   const onDrop = useCallback(
     (event) => {
       event.preventDefault();
+      setEditNode(false)
       if (!type) return;
-
       const position = screenToFlowPosition({
         x: event.clientX,
         y: event.clientY,
@@ -71,33 +71,7 @@ const DnDFlow = () => {
     },
     [screenToFlowPosition, type]
   );
-  const onSubmit = (e) => {
-    e.preventDefault();
-    if (!editNode) {
-      if (nodeLabel.trim()) {  
-        setNodes((prev) => [
-          ...prev,
-          {
-            id: `node-${Date.now()}`,
-            position: { x: Math.random() * 400, y: Math.random() * 400 },
-            data: { label: nodeLabel},
-            type: "CustomNode",
-          },
-        ]);
-        
-      }
-      setNodeLabel("");
-    } else {
-      const updatedNodes = nodes.map((node) =>
-        node.id === editNode.id
-          ? { ...editNode, data: { label: nodeLabel } }
-          : node
-      );
-      setNodes(updatedNodes);
-      setEditNode(null);
-      setNodeLabel("");
-    }
-  };
+ 
   const connect = useCallback((connection) => {
     const edge = {
       ...connection,
@@ -127,12 +101,6 @@ const DnDFlow = () => {
           onConnect={connect}
           onDrop={onDrop}
           onDragOver={onDragOver}
-          // onNodeClick={(e, val) => {
-          //   if (val) {
-          //     setNodeLabel(val?.data?.label);
-          //       setEditNode(val);
-          //   }
-          // }}
           onNodeClick={(e, val) => {
             if (val) {
               const isTitleClick = e.target.classList.contains('node_title');
@@ -216,7 +184,7 @@ const DnDFlow = () => {
         </ReactFlow>
       </div>
       <Sidebar
-        onSubmit={onSubmit}
+        // onSubmit={onSubmit}
         nodeLabel={nodeLabel}
         setNodeLabel={setNodeLabel}
         editNode={editNode}

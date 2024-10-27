@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useDnD } from './DnDContext';
 import FlowForm from './FlowForm';
+import FormModal from './FormModal';
 
-export default ({ onSubmit, nodeLabel, setNodeLabel, editNode , setDeleteNode,allNodes,setNodes,setEditNode}) => {
+export default ({ nodeLabel, setNodeLabel, editNode ,allNodes,setNodes,setEditNode}) => {
   const [_, setType] = useDnD();
   const nodes = [
     { id: 1, title: "User" },
@@ -28,6 +29,39 @@ const [nodesListing, setNodesListing] = useState(nodes)
   const handleSearch = (searchText) => {
    setNodesListing(nodes?.filter(item => item?.title?.toLowerCase().includes(searchText.toLowerCase())))
   }
+  // form Modale states 
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const onSubmit = (e) => {
+    e.preventDefault();
+    if (!editNode) {
+      if (nodeLabel.trim()) {  
+        setNodes((prev) => [
+          ...prev,
+          {
+            id: `node-${Date.now()}`,
+            position: { x: Math.random() * 400, y: Math.random() * 400 },
+            data: { label: nodeLabel},
+            type: "CustomNode",
+          },
+        ]);
+        
+      }
+      handleClose()
+      setNodeLabel("");
+    } else {
+      const updatedNodes = allNodes?.map((node) =>
+        node.id === editNode.id
+          ? { ...editNode, data: { label: nodeLabel } }
+          : node
+      );
+      setNodes(updatedNodes);
+      handleClose()
+      setEditNode(null);
+      setNodeLabel("");
+    }
+  };
   return (
     <aside>
       <h2 className="sidbar_description">Drag and drop nodes into the flow</h2>
@@ -44,9 +78,11 @@ const [nodesListing, setNodesListing] = useState(nodes)
         </div>
       ))}
        </div>
-      <div className='flow_form'>
+       <button onClick={handleOpen} className={editNode ? 'editing_node_btn' : 'adding_node_btn'}>{editNode ? 'Edit Node ': 'Add Node '}</button>
+       <FormModal open={open} handleClose={handleClose} onSubmit={onSubmit} nodeLabel={nodeLabel} setNodeLabel={setNodeLabel} editNode={editNode}/>
+      {/* <div className='flow_form'>
         <FlowForm onSubmit={onSubmit} nodeLabel={nodeLabel} setNodeLabel={setNodeLabel} editNode={editNode}  />
-      </div>
+      </div> */}
       {editNode && <div className='node_delete_wrapper'>
         <button onClick={(e) => {
           setNodes(allNodes?.filter(node => node?.id != editNode?.id))
